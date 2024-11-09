@@ -21,24 +21,22 @@ import traceback
 
 import requests, urllib.request, json
 from io import BytesIO
-import csv
 
 # define funciton for writing image and sleeping for 5 min.
 def write_to_screen(image, sleep_seconds):
     print('Writing to screen.')
     # Write to screen
     h_image = Image.new('1', (epd.width, epd.height), 255)
-
-    #Comment/Remove both lines if using 2 color screen
+    #red image
     h_red_image = Image.new('1', (epd.width, epd.height), 255)  # 250*122
+    #Comment/Remove if using 2 color screen
     draw_red = ImageDraw.Draw(h_red_image)
-
     # Open the template
     screen_output_file = Image.open(os.path.join(picdir, image))
     # Initialize the drawing context with template as background
     h_image.paste(screen_output_file, (0, 0))
     epd.init()
-    epd.display(epd.getbuffer(h_image), epd.getbuffer(h_red_image)) #Comment/Remove from the comma on if using a 2 color screen
+    epd.display(epd.getbuffer(h_image), epd.getbuffer(h_red_image)) #Comment/Remove from the coma on if using a 2 color screen
     # Sleep
     time.sleep(2)
     epd.sleep()
@@ -76,23 +74,22 @@ font50 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 50)
 font60 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 60)
 font100 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 100)
 font160 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 160)
-
 # Set the colors
 black = 'rgb(0,0,0)'
 white = 'rgb(255,255,255)'
 grey = 'rgb(235,235,235)'
-
-#Comment/Remove if using a 2 color screen
-red  = 'rgb(255,0,0)'
-
+red  = 0xFF0000
 # Initialize and clear screen
 print('Initializing and clearing screen.')
 epd.init()
 epd.Clear()
 
 #TempestWX URL with API Token and Station ID
-station = '**Station ID here**'
-token = '**Token Here**'
+station = 'Station ID Here'
+token = 'API Token Here'
+
+#NWS County ID
+county = 'NWS County ID here'
 
 URL = 'https://swd.weatherflow.com/swd/rest/better_forecast?station_id=' + station + '&units_temp=f&units_wind=mph&units_pressure=inhg&units_precip=in&units_distance=mi&token=' + token
 
@@ -173,7 +170,7 @@ while True:
             sunrise = datetime.fromtimestamp(sunriseepoch)
             sunset = datetime.fromtimestamp(sunsetepoch)
             #Get Severe weather data from NWS
-            response = requests.get("https://api.weather.gov/alerts/active?zone=OHC173")
+            response = requests.get("https://api.weather.gov/alerts/active?zone=" + county)
             nws = response.json()
 
             try:
@@ -186,8 +183,8 @@ while True:
 
             if alert != None and (event.endswith('Warning') or event.endswith('Watch')):
                 string_event = event
-            #Uncomment for testing string_event = 'Severe Thunderstorm Warning'
-            #Uncomment for testing print(string_event)
+            #string_event = 'Severe Thunderstorm Warning'
+            #print(string_event)
             
             # Set strings to be printed to screen
             string_temp_current = format(temp_current, '.0f') + u'\N{DEGREE SIGN}F'
@@ -289,7 +286,13 @@ while True:
         template.paste(strike_image, (605, 305))
         draw.text((695, 330), 'Strikes', font=font22, fill=white)
         draw.line((690, 355, 765, 355), fill =white, width=3)
-        draw.text((703, 360), strikes, font=font20, fill=white)
+        strikeimg = Image.new(mode='RGB', size=(50, 20), color='black') 
+        draw1 = ImageDraw.Draw(strikeimg)
+        x0 = (strikeimg.width // 2)
+        y0 = (strikeimg.height // 2)
+        draw1.text((x0, y0), strikes, fill='white', font=font20, anchor='mm')
+        template.paste(strikeimg, (703, 360))
+        #draw.text((703, 360), strikes, font=font20, fill=white)
         draw.text((685, 400), 'Distance', font=font22, fill=white)
         draw.line((680, 425, 773, 425), fill =white, width=3)
         draw.text((683, 430), lightningdist, font=font20, fill=white)
@@ -308,10 +311,22 @@ while True:
     #Severe Weather Mod
     try:
          if string_event != None:
+            #alert_file = 'warning.png'
+            #alert_image = Image.open(os.path.join(icondir, alert_file))
+            #template.paste(alert_image, (335, 255))
+            #draw.text((385, 263), string_event, font=font23, fill=black)
+
+            #Center the warning data at the borttom of the screen
+            textImg = Image.new(mode='RGB', size=(380, 40), color='white')
+            draw2 = ImageDraw.Draw(textImg)
+            x = (textImg.width // 2 + 25)
+            y = (textImg.height // 2)
+            draw2.text((x, y), string_event, fill='black', font=font23, anchor='mm')
+            text_width, text_height = draw.textsize(string_event, font=font23)
             alert_file = 'warning.png'
             alert_image = Image.open(os.path.join(icondir, alert_file))
-            template.paste(alert_image, (335, 255))
-            draw.text((385, 263), string_event, font=font23, fill=black)
+            textImg.paste(alert_image, ((((380 - text_width) // 2 ) - 25), 0))
+            template.paste(textImg, (330, 255))
     except NameError:
         print('No Severe Weather')
     # Save the image for display as PNG
