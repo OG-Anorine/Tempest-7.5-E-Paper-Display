@@ -5,6 +5,12 @@
 <br>
 <img src="https://github.com/OG-Anorine/Tempest-7.5-E-Paper-Display/blob/master/photos/IMG_6607.jpeg" width=40% height=40%>
 <h1>Versions</h1>
+  <h2>Version 1.1</h2>
+    <ul>
+	  <li>Corrected centering on NWS alert data</li>
+	  <li>Added variable to plug in NWS county code</li>
+	</ul>
+ 
   <h2>Version 1.0</h2>
     <ul>
 	  <li>Initial Commit.</li>
