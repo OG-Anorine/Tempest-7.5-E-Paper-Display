@@ -78,18 +78,19 @@ font160 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 160)
 black = 'rgb(0,0,0)'
 white = 'rgb(255,255,255)'
 grey = 'rgb(235,235,235)'
-red  = 0xFF0000
+
 # Initialize and clear screen
 print('Initializing and clearing screen.')
 epd.init()
 epd.Clear()
 
 #TempestWX URL with API Token and Station ID
-station = 'Station ID Here'
-token = 'API Token Here'
+station = 'STATION ID HERE'
+token = 'API TOKEN HERE'
 
-#NWS County ID
-county = 'NWS County ID here'
+#NWS Location code
+nswloc = 'LOCATION CODE HERE'
+nwsapi = 'https://api.weather.gov/alerts/active?zone=' + nwsloc
 
 URL = 'https://swd.weatherflow.com/swd/rest/better_forecast?station_id=' + station + '&units_temp=f&units_wind=mph&units_pressure=inhg&units_precip=in&units_distance=mi&token=' + token
 
@@ -148,6 +149,7 @@ while True:
             #Lighning strikes in the last 3 hours
             strikesraw = current['lightning_strike_count_last_3hr']
             strikes = f"{strikesraw:,}"
+
             #Lightning distance message
             lightningdist = current['lightning_strike_last_distance_msg']
 
@@ -170,7 +172,9 @@ while True:
             sunrise = datetime.fromtimestamp(sunriseepoch)
             sunset = datetime.fromtimestamp(sunsetepoch)
             #Get Severe weather data from NWS
-            response = requests.get("https://api.weather.gov/alerts/active?zone=" + county)
+            alert = None
+            string_event = None
+            response = requests.get(nwsapi)
             nws = response.json()
 
             try:
@@ -181,10 +185,8 @@ while True:
             except IndexError:
                 alert = None
 
-            if alert != None and (event.endswith('Warning') or event.endswith('Watch')):
+            if alert != None:
                 string_event = event
-            #string_event = 'Severe Thunderstorm Warning'
-            #print(string_event)
             
             # Set strings to be printed to screen
             string_temp_current = format(temp_current, '.0f') + u'\N{DEGREE SIGN}F'
@@ -192,8 +194,11 @@ while True:
             string_humidity = 'Humidity: ' + str(humidity) + '%'
             string_dewpt = 'Dew Point: ' + format(dewpt, '.0f') +  u'\N{DEGREE SIGN}F'
             string_wind = 'Wind: ' + format(wind, '.1f') + ' MPH ' + windcard
-            #string_windcard = windcard
-            string_report = 'Now: ' + report.title()
+            if report.title() == 'Wintry Mix Possible':
+                string_report = 'Now: '
+                string_reportaux = report.title()
+            else:
+                string_report = 'Now: ' + report.title()
             string_baro = str(baro) + ' inHg'
             string_temp_max = 'High: ' + format(temp_max, '>.0f') + u'\N{DEGREE SIGN}F'
             string_temp_min = 'Low:  ' + format(temp_min, '>.0f') + u'\N{DEGREE SIGN}F'
@@ -219,7 +224,7 @@ while True:
     # Draw top left box
     #Logic for nighttime....DAYTIME
     nowcheck = datetime.now()
-    if icon_code.startswith('possibly') or icon_code  == 'cloudy' or icon_code == 'foggy' or icon_code == 'windy' or icon_code.startswith('clear') or icon_code.startswith('partly'):
+    if icon_code.startswith('possibly') or icon_code == 'thundersnow' or icon_code  == 'cloudy' or icon_code == 'foggy' or icon_code == 'windy' or icon_code.startswith('clear') or icon_code.startswith('partly'):
         icon_file = icon_code + '.png'
     elif nowcheck >= sunrise and nowcheck < sunset:
         icon_file = icon_code + '-day.png'
@@ -228,8 +233,9 @@ while True:
     icon_image = Image.open(os.path.join(icondir, icon_file))
     template.paste(icon_image, (40, 15))
     ## Place a black rectangle outline
-    #draw.rectangle((25, 20, 225, 180), outline=black)
     draw.text((15, 183), string_report, font=font22, fill=black) #15, 190
+    if report.title() == 'Wintry Mix Possible':
+        draw.text((70, 185), string_reportaux, font=font20, fill=black)
     #Barometer trend logic block
     if trend == 'falling':
         baro_file = 'barodown.png'
@@ -240,23 +246,48 @@ while True:
     baro_image = Image.open(os.path.join(icondir, baro_file))
     template.paste(baro_image, (15, 213)) #15, 218
     draw.text((65, 223), string_baro, font=font22, fill=black) #65,228
-    precip_file = 'precip.png'
+    if temp_current <= 39 and temp_current >= 33:
+        precip_file = 'mix.png'
+    elif temp_current <= 32:
+        precip_file = 'chance_snow.png'
+    else:
+        precip_file = 'precip.png'
     precip_image = Image.open(os.path.join(icondir, precip_file))
     template.paste(precip_image, (15, 255)) #15, 260
     draw.text((65, 263), string_precip_percent, font=font22, fill=black) #65, 268
 
     # Draw top right box
     draw.text((365, 35), string_temp_current, font=font160, fill=black) #375,35
-    draw.text((360, 195), string_feels_like, font=font50, fill=black) #350,210
     difference = int(feels_like) - int(temp_current)
+
+#Center feels like with icons
+    textImg2 = Image.new(mode='RGB', size=(480, 65), color='white')
+    draw3 = ImageDraw.Draw(textImg2)
+    x2 = (textImg2.width // 2)
+    y2 = (textImg2.height // 2)
+    draw3.text((x2, y2), string_feels_like, fill='black', font=font50, anchor='mm')
+    text_width, text_height = draw.textsize(string_feels_like, font=font50)
+
     if difference >= 5:
         feels_file = 'finghot.png'
         feels_image = Image.open(os.path.join(icondir, feels_file))
-        template.paste(feels_image, (720, 196))
+        textImg2.paste(feels_image, ((((285 + text_width) // 2 ) + 75), 3))
+        template.paste(textImg2, (270, 195))
+
     if difference <= -5:
         feels_file = 'fingcold.png'
         feels_image = Image.open(os.path.join(icondir, feels_file))
-        template.paste(feels_image, (720, 196))
+        textImg2.paste(feels_image, ((((285 + text_width) // 2 ) + 75), 3))
+        template.paste(textImg2, (270, 195))
+
+    if dewpt >= 76:
+        feels_file = 'death.png'
+        feels_image = Image.open(os.path.join(icondir, feels_file))
+        textImg2.paste(feels_image, ((((285 + text_width) // 2 ) + 75), 3))
+        template.paste(textImg2, (270, 195))
+
+    else:
+        template.paste(textImg2, (285, 195))
 
     # Draw bottom left box
     draw.text((35, 330), string_temp_max, font=font50, fill=black) #35,325
@@ -276,7 +307,6 @@ while True:
     wind_image = Image.open(os.path.join(icondir, wind_file))
     template.paste(wind_image, (320, 425))
     draw.text((370, 435), string_wind, font=font23, fill=black) #345, 400
-    #draw.text((535, 435), string_windcard, font=font23, fill=black)
 
     # Draw bottom right box
     #Begin Lightning mod
@@ -292,7 +322,6 @@ while True:
         y0 = (strikeimg.height // 2)
         draw1.text((x0, y0), strikes, fill='white', font=font20, anchor='mm')
         template.paste(strikeimg, (703, 360))
-        #draw.text((703, 360), strikes, font=font20, fill=white)
         draw.text((685, 400), 'Distance', font=font22, fill=white)
         draw.line((680, 425, 773, 425), fill =white, width=3)
         draw.text((683, 430), lightningdist, font=font20, fill=white)
@@ -311,10 +340,6 @@ while True:
     #Severe Weather Mod
     try:
          if string_event != None:
-            #alert_file = 'warning.png'
-            #alert_image = Image.open(os.path.join(icondir, alert_file))
-            #template.paste(alert_image, (335, 255))
-            #draw.text((385, 263), string_event, font=font23, fill=black)
 
             #Center the warning data at the borttom of the screen
             textImg = Image.new(mode='RGB', size=(380, 40), color='white')
