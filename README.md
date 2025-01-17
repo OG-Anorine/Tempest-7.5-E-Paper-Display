@@ -5,7 +5,7 @@
 <br>
 <img src="https://github.com/OG-Anorine/Tempest-7.5-E-Paper-Display/blob/master/photos/IMG_6607.jpeg" width=40% height=40%>
 <h1>Versions</h1>
-  <h2>Version 1.2</h2>h2>
+  <h2>Version 1.2</h2>
     <ul>
 	    <li>Corrected NWS alerts not clearing when expired</li>
 	    <li>Changed NWS to include all alerts including statements, red flag, etc</li>
