@@ -5,6 +5,15 @@
 <br>
 <img src="https://github.com/OG-Anorine/Tempest-7.5-E-Paper-Display/blob/master/photos/IMG_6607.jpeg" width=40% height=40%>
 <h1>Versions</h1>
+  <h2>Version 1.2</h2>h2>
+    <ul>
+	    <li>Corrected NWS alerts not clearing when expired</li>
+	    <li>Changed NWS to include all alerts including statements, red flag, etc</li>
+	    <li>Added more visible location to enter NWS county code at line 92</li>
+	    <li>Fixed spacing issues with 'Wintry Mix Possible'</li>
+	    <li>Added logic for precipitation chance icon: 40+ umbrella for rain, 33-39 wintry mix icon, 32 and below snowflake</li>
+	    <li>Added skull and crossbones icon next to feels like in the event the dewpoint is 76 or higher</li>
+    </ul>
   <h2>Version 1.1</h2>
     <ul>
 	  <li>Corrected centering on NWS alert data</li>
