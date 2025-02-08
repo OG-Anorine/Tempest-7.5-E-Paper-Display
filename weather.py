@@ -102,8 +102,9 @@ while True:
             # HTTP request
             print('Attempting to connect to Tempest WX.')
             response = requests.get(URL)
-            print('Connection to Tempest WX successful.')
-            error_connect = None
+            if response.status_code == 200:
+                print('Connection to Tempest WX successful.')
+                error_connect = None
         except:
             # Call function to display connection error
             print('Connection error.')
