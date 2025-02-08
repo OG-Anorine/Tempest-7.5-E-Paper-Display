@@ -262,33 +262,50 @@ while True:
     difference = int(feels_like) - int(temp_current)
 
 #Center feels like with icons
-    textImg2 = Image.new(mode='RGB', size=(480, 65), color='white')
-    draw3 = ImageDraw.Draw(textImg2)
-    x2 = (textImg2.width // 2)
-    y2 = (textImg2.height // 2)
-    draw3.text((x2, y2), string_feels_like, fill='black', font=font50, anchor='mm')
-    text_width, text_height = draw.textsize(string_feels_like, font=font50)
-
     if difference >= 5:
+        textImg2 = Image.new(mode='RGB', size=(520, 65), color='white')
+        draw3 = ImageDraw.Draw(textImg2)
+        x2 = ((textImg2.width // 2)- 35) 
+        y2 = (textImg2.height // 2)
+        draw3.text((x2, y2), string_feels_like, fill='black', font=font50, anchor='mm')
+        text_width, text_height = draw.textsize(string_feels_like, font=font50)
         feels_file = 'finghot.png'
         feels_image = Image.open(os.path.join(icondir, feels_file))
-        textImg2.paste(feels_image, ((((285 + text_width) // 2 ) + 75), 3))
-        template.paste(textImg2, (270, 195))
+        textImg2.paste(feels_image, ((((265 + text_width) // 2 ) + 100), 3))
+        template.paste(textImg2, (265, 195))
 
-    if difference <= -5:
+    elif difference <= -5:
+        textImg2 = Image.new(mode='RGB', size=(520, 65), color='white')
+        draw3 = ImageDraw.Draw(textImg2)
+        x2 = ((textImg2.width // 2)- 35) 
+        y2 = (textImg2.height // 2)
+        draw3.text((x2, y2), string_feels_like, fill='black', font=font50, anchor='mm')
+        text_width, text_height = draw.textsize(string_feels_like, font=font50)
         feels_file = 'fingcold.png'
         feels_image = Image.open(os.path.join(icondir, feels_file))
-        textImg2.paste(feels_image, ((((285 + text_width) // 2 ) + 75), 3))
-        template.paste(textImg2, (270, 195))
+        textImg2.paste(feels_image, ((((265 + text_width) // 2 ) + 100), 3))
+        template.paste(textImg2, (265, 195))
 
-    if dewpt >= 76:
+    elif dewpt >= 76:
+        textImg2 = Image.new(mode='RGB', size=(520, 65), color='white')
+        draw3 = ImageDraw.Draw(textImg2)
+        x2 = ((textImg2.width // 2)- 35) 
+        y2 = (textImg2.height // 2)
+        draw3.text((x2, y2), string_feels_like, fill='black', font=font50, anchor='mm')
+        text_width, text_height = draw.textsize(string_feels_like, font=font50)
         feels_file = 'death.png'
         feels_image = Image.open(os.path.join(icondir, feels_file))
-        textImg2.paste(feels_image, ((((285 + text_width) // 2 ) + 75), 3))
-        template.paste(textImg2, (270, 195))
+        textImg2.paste(feels_image, ((((265 + text_width) // 2 ) + 100), 3))
+        template.paste(textImg2, (265, 195))
 
     else:
-        template.paste(textImg2, (285, 195))
+        textImg2 = Image.new(mode='RGB', size=(520, 65), color='white')
+        draw3 = ImageDraw.Draw(textImg2)
+        x2 = (textImg2.width // 2) 
+        y2 = (textImg2.height // 2)
+        draw3.text((x2, y2), string_feels_like, fill='black', font=font50, anchor='mm')
+        text_width, text_height = draw.textsize(string_feels_like, font=font50)
+        template.paste(textImg2, (265, 195))
 
     # Draw bottom left box
     draw.text((35, 330), string_temp_max, font=font50, fill=black) #35,325
