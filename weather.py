@@ -333,10 +333,16 @@ while True:
 
     #Precipitaton mod
     if total_rain > 0 or total_rain == 1000:
+        textImg3 = Image.new(mode='RGB', size=(520, 50), color='white')
+        draw4 = ImageDraw.Draw(textImg3)
+        x3 = ((textImg2.width // 2) + 25) 
+        y3 = ((textImg2.height // 2) - 10)
+        draw4.text((x3, y3), string_total_rain, fill='black', font=font23, anchor='mm')
+        text_width, text_height = draw.textsize(string_total_rain, font=font23)
         train_file = 'totalrain.png'
         train_image = Image.open(os.path.join(icondir, train_file))
-        template.paste(train_image, (330, 15))
-        draw.text((380, 22), string_total_rain, font=font23, fill=black)
+        textImg3.paste(train_image, ((((text_width) // 2 ) -110), 0))
+        template.paste(textImg3, (265, 15))
 
     #Severe Weather Mod
     try:
