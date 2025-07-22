@@ -5,6 +5,20 @@
 <br>
 <img src="https://github.com/OG-Anorine/Tempest-7.5-E-Paper-Display/blob/master/photos/IMG_6607.jpeg" width=40% height=40%>
 <h1>Versions</h1>
+  <h2>Version 1.4</h2>
+    <ul>
+	    <li>Easier configuration - All inputs at top of script</li>
+	    <li>New Chrome dinosaur inspiried Error screen</li>
+	    <li>Meme mode - simply change 1 or 0 to toggle on/off at the top of script</li>
+	    <ul>
+		    <li>Angry Sun from Super Mario Bros. 3 if feels like >95 and humidity >=60 or dew point >=70</li>
+		    <li>Skull and cross bones if dew point is >=76</li>
+		    <li>Ron Paul "It's Hapenening" meme for Thundersnow</li>
+		    <li>Windy icon replaced with "IT HECKIN WIMDY" Fox meme (configured from wind gust speed at beginning of script)</li>
+	    </ul>
+	    <li>Better error handling - no more doom loops</li>
+	    <li>Better centering of data</li>
+    </ul>
   <h2>Version 1.3</h2>
     <ul>
 	    <li>Corrected error handling for API - Upon reconnection the screen will reset as expected, no more failure loop</li>
