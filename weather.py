@@ -150,10 +150,6 @@ while True:
             # get description
             weather = current['conditions']
             report = current['conditions']
-            #if report == 'Thunderstorms Possible':
-                #report = 'Storms Possible'
-            #if report == 'Thunderstorms Likely':
-                #report = 'Storms Likely'
             #get pressure trend
             baro = current['sea_level_pressure']
             trend = current['pressure_trend']
