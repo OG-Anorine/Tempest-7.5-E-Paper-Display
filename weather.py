@@ -336,7 +336,7 @@ while True:
         textImg2.paste(feels_image, ((((265 + text_width) // 2 ) + 100), 3))
         template.paste(textImg2, (265, 195))
 
-    elif dewpt >= 76:
+    elif memes = 0 and dewpt >= 76:
         textImg2 = Image.new(mode='RGB', size=(520, 65), color='white')
         draw3 = ImageDraw.Draw(textImg2)
         x2 = ((textImg2.width // 2)- 35) 
