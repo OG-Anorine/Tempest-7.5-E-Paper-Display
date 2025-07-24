@@ -160,12 +160,12 @@ while True:
                 icon_code = 'windy'
             elif memes == 1 and icon_code != 'thunderstorm' and icon_code != 'snow' and icon_code != 'sleet' and icon_code != 'rainy' and gust >= wind_thresh:
                 icon_code = 'windy-meme'
+            elif memes ==1 and dewpt >= 76:
+                icon_code = 'death-meme'
+                report = 'Death'                
             elif memes ==1 and feels_like >= 95 and (humidity >= 60 or dewpt >= 70) :
                 icon_code = 'angry-sun-meme'
                 report = 'World 2-'
-            elif memes ==1 and dewpt >= 76:
-                icon_code = 'death-meme'
-                report = 'Death'
             else:
                 icon_code = current['icon']
 
