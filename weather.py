@@ -312,7 +312,19 @@ while True:
     difference = int(feels_like) - int(temp_current)
 
     #Center Feels Like
-    if difference >= 5:
+    if memes == 0 and dewpt >= 76:
+        textImg2 = Image.new(mode='RGB', size=(520, 65), color='white')
+        draw3 = ImageDraw.Draw(textImg2)
+        x2 = ((textImg2.width // 2)- 35) 
+        y2 = (textImg2.height // 2)
+        draw3.text((x2, y2), string_feels_like, fill='black', font=font50, anchor='mm')
+        text_width, text_height = draw.textsize(string_feels_like, font=font50)
+        feels_file = 'death.png'
+        feels_image = Image.open(os.path.join(icondir, feels_file))
+        textImg2.paste(feels_image, ((((265 + text_width) // 2 ) + 100), 3))
+        template.paste(textImg2, (265, 195))
+        
+    if (report != 'Death' and report != 'World 2-') and difference >= 5:
         textImg2 = Image.new(mode='RGB', size=(520, 65), color='white')
         draw3 = ImageDraw.Draw(textImg2)
         x2 = ((textImg2.width // 2)- 35) 
@@ -332,18 +344,6 @@ while True:
         draw3.text((x2, y2), string_feels_like, fill='black', font=font50, anchor='mm')
         text_width, text_height = draw.textsize(string_feels_like, font=font50)
         feels_file = 'feelscold.png'
-        feels_image = Image.open(os.path.join(icondir, feels_file))
-        textImg2.paste(feels_image, ((((265 + text_width) // 2 ) + 100), 3))
-        template.paste(textImg2, (265, 195))
-
-    elif memes = 0 and dewpt >= 76:
-        textImg2 = Image.new(mode='RGB', size=(520, 65), color='white')
-        draw3 = ImageDraw.Draw(textImg2)
-        x2 = ((textImg2.width // 2)- 35) 
-        y2 = (textImg2.height // 2)
-        draw3.text((x2, y2), string_feels_like, fill='black', font=font50, anchor='mm')
-        text_width, text_height = draw.textsize(string_feels_like, font=font50)
-        feels_file = 'death.png'
         feels_image = Image.open(os.path.join(icondir, feels_file))
         textImg2.paste(feels_image, ((((265 + text_width) // 2 ) + 100), 3))
         template.paste(textImg2, (265, 195))
