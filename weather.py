@@ -15,6 +15,7 @@ memes = 1 # Enter 1 for on, 0 (zero, not the letter O) for off
 wind_thresh = 15 # Wind gust speed in MPH to trigger windy icon
 super_cold = -10 # Triggers Ice King meme if feels like is equal to or lower than set value
 tout = 3 # Timeout for accessing data. If the error screen comes up too often increase this time
+pytzone = 'US/Eastern' # Python timezone for conversion
 
 import sys
 import os
@@ -151,9 +152,9 @@ def convert_utc_to_est(iso_utc):
     # Localize properly to UTC
     utc_dt = pytz.UTC.localize(naive_utc)
     # Convert to US/Eastern
-    eastern = pytz.timezone('US/Eastern')
-    est_time = utc_dt.astimezone(eastern)
-    return est_time
+    tzone = pytz.timezone(pytzone)
+    conv_time = utc_dt.astimezone(tzone)
+    return conv_time
 
 # Set the fonts
 font20 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 20)
