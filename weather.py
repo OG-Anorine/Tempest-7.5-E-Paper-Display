@@ -145,13 +145,13 @@ def create_feelslike_image(feels_file=None, paste_icon=False):
 
     return center_feels
 
-#Convert UTC time to Eastern following DST
-def convert_utc_to_est(iso_utc):
+#Convert UTC time following DST
+def convert_utc(iso_utc):
     # Parse naive UTC datetime
     naive_utc = datetime.strptime(iso_utc, "%Y-%m-%dT%H:%M:%SZ")
     # Localize properly to UTC
     utc_dt = pytz.UTC.localize(naive_utc)
-    # Convert to US/Eastern
+    # Convert time
     tzone = pytz.timezone(pytzone)
     conv_time = utc_dt.astimezone(tzone)
     return conv_time
@@ -523,8 +523,8 @@ while True:
     sunrise_t = sunrise.strftime("%H:%M")
     sunset_t = sunset.strftime("%H:%M")
     try:
-        moonrise_t = convert_utc_to_est(moonrise).strftime("%H:%M")
-        moonset_t = convert_utc_to_est(moonset).strftime("%H:%M")
+        moonrise_t = convert_utc(moonrise).strftime("%H:%M")
+        moonset_t = convert_utc(moonset).strftime("%H:%M")
     except:
         moonrise_t = moonrise
         moonset_t = moonset
