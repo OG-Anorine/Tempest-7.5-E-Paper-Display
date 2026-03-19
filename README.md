@@ -1,10 +1,21 @@
 <h1>Tempest E-paper Weather Display</h1>
 <br>
   Raspberry Pi weather display using Waveshare e-paper 7.5 inch display, Tempest Weather Station data, and Python.
-<img src="https://github.com/OG-Anorine/Tempest-7.5-E-Paper-Display/blob/master/photos/IMG_6648.jpeg" width=40% height=40%>
+<img src="https://github.com/OG-Anorine/Tempest-7.5-E-Paper-Display/blob/master/photos/screen_output.png" width=40% height=40%>
 <br>
 <img src="https://github.com/OG-Anorine/Tempest-7.5-E-Paper-Display/blob/master/photos/IMG_6607.jpeg" width=40% height=40%>
 <h1>Versions</h1>
+  <h2>Version 2.0</h2>
+    <ul>
+		<li>Complete redesign of the original layout</li>
+		<li>Additional APIs for lunar phases (includes eclipse data)</li>
+		<li>Improved error handling</li>
+		<li>Improved logging when redirecting screen output to file</li>
+		<li>Additional error screen for API key errors (major source of blank screen flashing previously)</li>
+		<li>More memes - who doesn't enjoy a good meme?</li>
+		<li>Precipitation follows Tempest WX icon codes rather than temperature</li>
+		<li>Added Sunrise/Sunset and Moonrise/Moonset data</li>
+	</ul>  
   <h2>Version 1.5</h2>
     <ul>
 		<li>Updated compatability for Debian 13 (Trixie)</li>
@@ -56,27 +67,28 @@
     <li>Assuming you have a Pi of your choice loaded, you will need to setup the e-paper display per the instructions from WaveShare: https://www.waveshare.com/wiki/7.5inch_e-Paper_HAT_(B)_Manual#Working_With_Raspberry_Pi.  *Note: these instructions are for the 3 color screen which I am using.  I have included comments in the code to change it back to the 2 color if desired.</li>
     <li>Open 'weather.py' and replace **Station ID here** with you station ID (Log into tempestwx.com - after successful login your station id will be listed at the end of the URL: https://tempestwx.com/station/XXXXXX) and **Token Here** with your API key (Create authorization at https://tempestwx.com/settings/tokens).</li>
     <li>Get your State/County ID from NSW to populate Watch/Warning data.  I have not found a great way to get this data other than using a multi-step process.  1. Go to https://www.weather.gov and enter your ZIP code on the left.  2. After the locaiton loads, click on "Get detailed info" 3. Select your city if needed 4. Get the coordinates out of the URL - these will be plugged into the API via browser of your choice: https://api.weather.gov/points/[start,end] - read through the data and look for "county": at the end of the JSON response.  This is your county code to plug into the Python code.  </li>
+	<li>You will need an API token from freeastroapi.com to populate the moon phases, eclipse data, and moonrise/moonset data.  This is limited to 80 hits a day, but the screen is coded to only hit at the first run at the top of the hour or uopn reboot.
     <li>Create a script in your home directory that contains 2 commands. cd /home/[username]/Tempest-7.5-E-Paper-Display and sudo python weather.py - each on their own line.  Name this file something like startup.sh.  You will then need to chmod 755 [filename].sh to allow it to execute./</li>
     <li>Create 2 cronjobs in the root crontab.  1. @reboot /home/[username]/[filenamefromabovestep].sh - and 2. 30 3 * * * reboot - the first number represents minutes, the second the hour.  Reboot the Pi at a time of your choosing, this will refresh the screen to prevent burn-in. </li>
   </ol>
 <br> 
 
 # Note 
-The storm data on this build is dynamic.  Rain totals, severe weather alerts, and lightning strike data only show up when it is present.  This is intentional to reduce clutter on the screen.
+The storm data on this build is dynamic.  Rain totals, severe weather alerts, eclipse info, and lightning strike data only show up when it is present.  This is intentional to reduce clutter on the screen.
 
 <b>Storm data:</b>
 <br>
-<img src="https://github.com/OG-Anorine/Tempest-7.5-E-Paper-Display/blob/master/photos/storm.png"> 
+<img src="https://github.com/OG-Anorine/Tempest-7.5-E-Paper-Display/blob/master/photos/storm_output.png"> 
 <br>
 <b>Normal:</b>
 <br>
-<img src="https://github.com/OG-Anorine/Tempest-7.5-E-Paper-Display/blob/master/photos/no_storm.png"> 
+<img src="https://github.com/OG-Anorine/Tempest-7.5-E-Paper-Display/blob/master/photos/screen_output.png"> 
 <br>
 <br>
 If you are not using a 7.5 inch Version 2b display, you will want to replace 'epd7in5b_V2.py' in the 'lib' folder with whichever one you have from https://github.com/waveshare/e-Paper/tree/master/RaspberryPi_JetsonNano/python/lib/waveshare_epd<br>
 Fairly extensive adjustments will have to be made for other sized screens.
 
-Optional items - there is code embedded that at a gust of 10MPH (at time of refresh) the current weather status will update to "IT HECKIN WIMDY" meme.  This was a nod to the Mrs who loves the meme, but by no means is required to remain.  THis section of code can easily be commented out and the windy.png icon replaced.  Simply remove windy.png and rename windy2.png to windy.png.  
+Optional items - Meme Mode can be enabled or disabled by setting 1 for on, 0 for off.  
 
 # Parts
 <ul>
