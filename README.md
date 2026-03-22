@@ -5,6 +5,8 @@
 <br>
 <img src="https://github.com/OG-Anorine/Tempest-7.5-E-Paper-Display/blob/master/photos/IMG_6607.jpeg" width=40% height=40%>
 <h1>Versions</h1>
+  <h2>Version 2.0.1</h2>
+    <ul>Added more error handling on backup lunar API</ul>
   <h2>Version 2.0</h2>
     <ul>
 		<li>Complete redesign of the original layout</li>
