@@ -8,6 +8,8 @@
   <h2>Version 2.0.1</h2>
     <ul>
 		<li>Added more error handling on backup lunar API</li>
+		<li>Worked with Free Astro API dev to clarify Eclipse keys, changes reflected in code</li>
+		<li>Added lookup against US Naval Observatory in the event moonset ocurrs the next day.  This will keep Free Astro API hits low.</li>
 	</ul>
   <h2>Version 2.0</h2>
     <ul>
