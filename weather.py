@@ -389,6 +389,9 @@ while True:
                 except KeyError:
                     print(str(datetime.now()) + ' US Naval Observatory API Key Error.')
                     display_error('API')
+                except IndexError:
+                    print(str(datetime.now()) + ' US Naval Observatory API Index Error.')
+                    display_error('API')
 
             # Set strings to be printed to screen
             string_temp_current = format(temp_current, '.0f') + u'\N{DEGREE SIGN}F'
