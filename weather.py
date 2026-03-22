@@ -35,7 +35,7 @@ ec = 0
 with open('reboot.txt', 'r') as file:
     reboot = file.read()
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta
 import pytz
 import time
 from PIL import Image,ImageDraw,ImageFont
@@ -63,6 +63,19 @@ params = {
 headers = {
     "x-api-key": moon_token
 }
+
+#T+1 Lunar parameters
+moon_date_p1 = (datetime.now() + timedelta(days=1))
+params_p1 = {
+    "date": moon_date_p1,
+    "lat": latitude,
+    "lon": longitude,
+    "include_eclipse": "true",
+    "include_special": "true",
+    "include_rise_set": "true"
+}
+
+moon_bp1_url = 'https://aa.usno.navy.mil/api/rstt/oneday?date=' + (moon_date_p1.strftime("%Y-%m-%d")) + '&coords=' + latitude + ', ' + longitude + '&tz=' + tz_offset + '&dst=true'
 
 # define funciton for writing image and sleeping for 5 min.
 def write_to_screen(image, sleep_seconds):
@@ -360,32 +373,55 @@ while True:
                 harvest = moon_api['special_moon']['is_harvest_moon']
                 hunter = moon_api['special_moon']['is_hunter_moon']
                 special = moon_api['special_moon']['labels']
+                moonrise = moon_api['rise_set']['rise']
                 eclipse = moon_api['eclipse']['is_eclipse']
                 blood_moon = moon_api['eclipse']['is_blood_moon']
-                e_type = moon_api['eclipse']['type']
-                e_check = moon_api['eclipse']['is_eclipse']
-                e_date = moon_api['eclipse']['date']
-                e_vis = moon_api['eclipse']['visibility']
-                e_count = moon_api['eclipse']['days_from_query']
-                moonrise = moon_api['rise_set']['rise']
-                moonset = moon_api['rise_set']['set']
+                try:
+                    e_type = moon_api['eclipse']['type']
+                    e_check = moon_api['eclipse']['is_eclipse']
+                    e_date = moon_api['eclipse']['date']
+                    e_vis = moon_api['eclipse']['visibility']
+                    e_count = moon_api['eclipse']['days_from_query']
+                except KeyError:
+                    e_check = False
+                    print(str(datetime.now()) + ' No current eclipse data.')
+                try:
+                    moonset = moon_api['rise_set']['set']
+                except KeyError:
+                    print(str(datetime.now()) + ' Moonset occurs past 12am, pulling data T+1 from US Naval Observatory.')
+                    moon_bp1_response = requests.get(moon_bp1_url, timeout = tout)
+                    moon_bp1_check = (moon_bp1_response.status_code == requests.codes.ok)
+                    moon_bp1_api = moon_bp1_response.json()
+                    print(str(datetime.now()) + ' Moonset for T+1 from US Naval Observatory API successful. Status code: ' + str(moon_bp1_response.status_code))
+                    moonset = moon_bp1_api['properties']['data']['moondata'][2]['time']
+                    moonset = moonset[:-3]
+                    
             #On key error activate backup moon API to US Navy
             except KeyError:
                 print(str(datetime.now()) + ' Free Astro API Key error, using US Naval Observatory.')
                 moon_b_response = requests.get(moon_b_url, timeout = tout)
                 moon_b_check = (moon_b_response.status_code == requests.codes.ok)
                 moon_b_api = moon_b_response.json()
+                #print(moon_b_api)
                 print(str(datetime.now()) + ' JSON acquisition from US Naval Observatory API successful. Status code: ' + str(moon_b_response.status_code))
                 try:
                     #Manual override to drop eclipse data
                     e_check = False
                     moonrise = moon_b_api['properties']['data']['moondata'][0]['time']
-                    moonset = moon_b_api['properties']['data']['moondata'][2]['time']
-                    moonrise = moonrise[:-3]
-                    moonset = moonset[:-3]
                     phase = moon_b_api['properties']['data']['curphase']
                     moon_lux_raw = moon_b_api['properties']['data']['fracillum']
                     moon_lux = float(moon_lux_raw.strip('%')) / 100
+                    try:
+                        moonset = moon_b_api['properties']['data']['moondata'][2]['time']
+                    except IndexError:
+                        print(str(datetime.now()) + ' Moonset occurs past 12am, pulling data T+1.')
+                        moon_bp1_response = requests.get(moon_bp1_url, timeout = tout)
+                        moon_bp1_check = (moon_bp1_response.status_code == requests.codes.ok)
+                        moon_bp1_api = moon_bp1_response.json()
+                        print(str(datetime.now()) + ' Moonset for T+1 from US Naval Observatory API successful. Status code: ' + str(moon_bp1_response.status_code))
+                        moonset = moon_bp1_api['properties']['data']['moondata'][2]['time']
+                    moonrise = moonrise[:-3]
+                    moonset = moonset[:-3]
                 except KeyError:
                     print(str(datetime.now()) + ' US Naval Observatory API Key Error.')
                     display_error('API')
