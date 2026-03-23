@@ -5,6 +5,14 @@
 <br>
 <img src="https://github.com/OG-Anorine/Tempest-7.5-E-Paper-Display/blob/master/photos/IMG_6607.jpeg" width=40% height=40%>
 <h1>Versions</h1>
+  <h2>Version 2.1</h2>
+    <ul>
+		<li>Removed pytz module requirement</li>
+		<li>Removed UTC to local timezone conversion definition</li>
+		<li>Removed API call to Free Astro API for moonrise/moonset data due to observed inconsistencies.</li>
+		<li>Created logic to traverse moonrise/moonset API changes based on dates</li>
+		<li>General cleanup of legacy code</li>
+	</ul>
   <h2>Version 2.0.1</h2>
     <ul>
 		<li>Added more error handling on backup lunar API</li>
