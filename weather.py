@@ -356,7 +356,6 @@ while True:
                 event = alert['event']
                 urgency = alert['urgency']
                 severity = alert['severity']
-                swstitle = alert['parameters']['NWSheadline']
             except IndexError:
                 alert = None
 
