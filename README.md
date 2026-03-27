@@ -5,6 +5,10 @@
 <br>
 <img src="https://github.com/OG-Anorine/Tempest-7.5-E-Paper-Display/blob/master/photos/IMG_6607.jpeg" width=40% height=40%>
 <h1>Versions</h1>
+  <h2>Version 2.1.1</h2>
+    <ul>
+		<li>Corrected icon logic for special weather statement vs watch/warnings</li>
+	</ul>
   <h2>Version 2.1</h2>
     <ul>
 		<li>Removed pytz module requirement</li>
