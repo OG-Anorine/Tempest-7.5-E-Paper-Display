@@ -682,7 +682,7 @@ while True:
             draw = ImageDraw.Draw(warning_img)
 
             # Select alert image and x offset
-            if 'Watch' or 'Warning' not in string_event:
+            if 'Statement' in string_event:
                 x = (warning_img.width // 2) + 25
                 alert_file = 'info.png'
             else:
