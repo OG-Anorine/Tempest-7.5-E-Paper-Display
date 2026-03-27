@@ -8,6 +8,7 @@
   <h2>Version 2.1.1</h2>
     <ul>
 		<li>Corrected icon logic for special weather statement vs watch/warnings</li>
+		<li>Removed NWS Headline - the headlines tend to be too long for the 7.5" screen</li>
 	</ul>
   <h2>Version 2.1</h2>
     <ul>
